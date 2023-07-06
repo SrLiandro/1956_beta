@@ -19,8 +19,8 @@ focus_tree = {
 
 	focus = {
 		id = ISR_revolution
-		icon = GFX_goal_ISR_whole
-		cost = 3
+		icon = GFX_goal_ISR_flag
+		cost = 2
 		x = 0
 		bypass = {
 			NOT = {
@@ -30,6 +30,10 @@ focus_tree = {
 		completion_reward = {
 			add_political_power = 100
 			add_war_support = 0.2
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_WAR_SUPPORT
 		}
 	}
 	focus = {
@@ -50,13 +54,16 @@ focus_tree = {
 			add_manpower = 20000
 			add_ideas = ISR_diaspora_volunteers
 		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
 	}
 	focus = {
 		id = ISR_consolidate_haganah
 		icon = GFX_goal_ISR_haganah
 		cost = 5
 		relative_position_id = ISR_call_diaspora_volunteers
-		x = -2
+		x = -4
 		y = 1
 		prerequisite = {
 			focus = ISR_call_diaspora_volunteers
@@ -95,29 +102,50 @@ focus_tree = {
 			}
 			add_equipment_to_stockpile = {
 				type = infantry_equipment_1
-				amount = 500
+				amount = 200
 			}
 			add_popularity = {
 				ideology = democratic
-				popularity = 0.05
+				popularity = 0.025
 			}
 			add_popularity = {
 				ideology = communism
-				popularity = 0.05
+				popularity = 0.025
 			}
 			custom_effect_tooltip = MPL_request_support
 		}
-		
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MILITARY_EQUIPMENT
+		}
+	}
+	focus = {
+		id = ISR_dealing_with_irgun
+		icon = GFX_goal_control_army
+		cost = 2
+		relative_position_id = ISR_consolidate_haganah
+		x = 2
+		y = 1
+		prerequisite = {
+			focus = ISR_consolidate_haganah
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_popularity = {
+				ideology = neutrality
+				popularity = -0.02
+			}
+		}
 	}
 	focus = {
 		id = ISR_subvert_irgun_influence 
 		icon = GFX_goal_generic_break_army
-		cost = 3
-		relative_position_id = ISR_consolidate_haganah
+		cost = 2
+		relative_position_id = ISR_dealing_with_irgun
 		x = 1
 		y = 1
 		prerequisite = {
-			focus = ISR_consolidate_haganah
+			focus = ISR_dealing_with_irgun
 		}
 		completion_reward = {
 			add_popularity = {
@@ -126,20 +154,26 @@ focus_tree = {
 			}
 			add_political_power = -25
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_form_the_idf
 		icon = GFX_goal_ISR_IDF_2
-		cost = 3
-		relative_position_id = ISR_consolidate_haganah
+		cost = 2
+		relative_position_id = ISR_dealing_with_irgun
 		x = -1 
 		y = 1
 		prerequisite = {
-			focus = ISR_consolidate_haganah
+			focus = ISR_dealing_with_irgun
 		}
 		completion_reward = {
 			add_command_power = 30
 			add_stability = 0.05
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -161,14 +195,152 @@ focus_tree = {
 				ideology = neutrality
 				popularity = -0.1
 			}
-			
+			remove_ideas = ISR_disorganized_militias
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+	focus = {
+		id = ISR_ben_gurion_strategy
+		icon = GFX_goal_plan
+		relative_position_id = ISR_consolidate_haganah
+		x = -1 
+		y = 1
+		cost = 3
+		prerequisite = {
+			focus = ISR_consolidate_haganah
+		}
+		bypass = {
+			NOT = {
+				has_war_with = PAL
+			}
+		}
+		completion_reward = {
+			add_ideas = ISR_always_first
+			add_command_power = 20
+			army_experience = 10
+			add_war_support = 0.05
+		}
+	}
+	focus = {
+		id = ISR_southern_plan
+		icon = GFX_goal_wargaming
+		relative_position_id = ISR_ben_gurion_strategy
+		x = 0 
+		y = 1
+		cost = 3
+		prerequisite = {
+			focus = ISR_ben_gurion_strategy
+		}
+		bypass = {
+			NOT = {
+				has_war_with = PAL
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					controls_province = 4088
+				}
+				1017 = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						province = 4088
+						instant_build = yes
+					}
+				}
+			}
+			army_experience = 20
+			if = {
+				limit = {
+					controls_province = 4088
+				}
+				1017 = {
+					create_unit = {
+						prioritize_location = 4088
+						division = "name = \"Negev Brigade \" division_template = \"Infantry Division\" start_experience_factor = 0.1 start_equipment_factor = 0.85 force_equipment_variants = { infantry_equipment_0 = { owner = ISR } }" 
+						owner = ISR
+					}
+				}
+			}
+			else = {
+				capital_scope = {
+					create_unit = {
+						division = "name = \"Negev Brigade \" division_template = \"Infantry Division\" start_experience_factor = 0.1 start_equipment_factor = 0.85 force_equipment_variants = { infantry_equipment_0 = { owner = ISR } }" 
+						owner = ISR
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = ISR_operation_yoav
+		icon = GFX_goal_generic_tank_map
+		relative_position_id = ISR_southern_plan
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = ISR_southern_plan
+		}
+		prerequisite = {
+			focus = ISR_form_the_idf
+		}
+		cost = 3
+		bypass = {
+			OR = {
+				has_full_control_of_state = 1017
+				NOT = {
+					has_war_with = PAL
+				}
+			}
+		}
+		completion_reward = {
+			1017 = {
+				add_dynamic_modifier = {
+					modifier = r56_ISR_negev_offensive
+					days = 60
+				}
+			}
+		}
+	}
+	focus = {
+		id = ISR_czech_weaponry 
+		icon = GFX_goal_generic_befriend_czech
+		relative_position_id = ISR_call_diaspora_volunteers
+		x = 0 
+		y = 2
+		prerequisite = {
+			focus = ISR_consolidate_haganah
+			focus = ISR_gather_irgun
+		}
+		cancel_if_invalid = no
+		continue_if_invalid = yes
+		cost = 3
+		available = {
+			CZE = {
+				exists = yes
+				has_opinion = {
+					target = ISR
+					value > -1
+				}
+			}
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = 500
+				producer = CZE
+			}
 		}
 	}
 	focus = {
 		id = ISR_gather_irgun
 		icon = GFX_goal_ISR_irgun
 		relative_position_id = ISR_call_diaspora_volunteers
-		x = 2
+		x = 4
 		y = 1
 		cost = 5
 		prerequisite = {
@@ -207,7 +379,7 @@ focus_tree = {
 			}
 			add_equipment_to_stockpile = {
 				type = infantry_equipment_1
-				amount = 500
+				amount = 200
 			}
 			add_popularity = {
 				ideology = neutrality
@@ -215,16 +387,38 @@ focus_tree = {
 			}
 			custom_effect_tooltip = MPL_request_support
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MILITARY_EQUIPMENT
+		}
+	}
+	focus = {
+		id = ISR_subvert_haganah
+		icon = GFX_goal_generic_anti_communism
+		relative_position_id = ISR_gather_irgun
+		x = -2
+		y = 1
+		cost = 2
+		prerequisite = {
+			focus = ISR_gather_irgun
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.02
+			}
+		}
 	}
 	focus = {
 		id = ISR_spread_revisionist_media
 		icon = GFX_goal_generic_propaganda
-		relative_position_id = ISR_gather_irgun
+		relative_position_id = ISR_subvert_haganah
 		x = -1
 		y = 1
-		cost = 3
+		cost = 2
 		prerequisite = {
-			focus = ISR_gather_irgun
+			focus = ISR_subvert_haganah
 		}
 		completion_reward = {
 			add_popularity = {
@@ -233,22 +427,28 @@ focus_tree = {
 			}
 			add_political_power = -50
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_steal_haganah_weapons
 		icon = GFX_goal_generic_seize_stockpiles
-		relative_position_id = ISR_gather_irgun
+		relative_position_id = ISR_subvert_haganah
 		x = 1
 		y = 1
-		cost = 3
+		cost = 2
 		prerequisite = {
-			focus = ISR_gather_irgun
+			focus = ISR_subvert_haganah
 		}
 		completion_reward = {
 			add_equipment_to_stockpile = {
 				type = infantry_equipment_1
 				amount = 500
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_MILITARY_EQUIPMENT
 		}
 	}
 	focus = {
@@ -271,7 +471,133 @@ focus_tree = {
 				ideology = neutrality
 				popularity = 0.1
 			}
+			remove_ideas = ISR_disorganized_militias
+			custom_effect_tooltip = MPL_newline
 			custom_effect_tooltip = ISR_coup_after_war
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+	focus = {
+		id = ISR_begin_approach
+		icon = GFX_goal_generic_revolt
+		relative_position_id = ISR_gather_irgun
+		x = 1
+		y = 1
+		cost = 3
+		prerequisite = {
+			focus = ISR_gather_irgun
+		}
+		bypass = {
+			NOT = {
+				has_war_with = PAL
+			}
+		}
+		completion_reward = {
+			add_ideas = ISR_alei_barikadot
+			add_command_power = 20
+			army_experience = 10
+			add_war_support = 0.05
+		}
+	}
+	focus = {
+		id = ISR_jerusalem_strategy
+		icon = GFX_goal_generic_defense_of_the_lands
+		relative_position_id = ISR_begin_approach
+		x = 0
+		y = 1
+		cost = 3
+		prerequisite = {
+			focus = ISR_begin_approach
+		}
+		bypass = {
+			NOT = {
+				has_war_with = PAL
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_war_with = PAL
+				}
+				if = {
+					limit = {
+						controls_state = 1016
+					}
+					1016 = {
+						add_dynamic_modifier = {
+							modifier = r56_ISR_jerusalem_strategy
+						}
+					}
+				}
+				else = {
+					1016 = {
+						add_dynamic_modifier = {
+							modifier = r56_ISR_retake_jerusalem
+						}
+					}
+				}
+			}
+			else = {
+				1016 = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						instant_build = yes
+						province = 1086
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = ISR_the_west_bank
+		icon = GFX_goal_defensive_position2
+		relative_position_id = ISR_jerusalem_strategy
+		x = 0
+		y = 1
+		cost = 3
+		prerequisite = {
+			focus = ISR_jerusalem_strategy
+		}
+		prerequisite = {
+			focus = ISR_steal_haganah_weapons
+		}
+		available = {
+			controls_province = 1065
+		}
+		bypass = {
+			NOT = {
+				has_war_with = PAL
+			}
+		}
+		completion_reward = {
+			454 = {
+				add_building_construction = {
+					type = bunker
+					province = 1065
+					instant_build = yes
+					level = 1
+				}
+				create_unit = {
+					prioritize_location = 1065
+					division = "name = \"Irgun Brigade \" division_template = \"Infantry Division\" start_experience_factor = 0.1 start_equipment_factor = 0.85 force_equipment_variants = { infantry_equipment_0 = { owner = ISR } }" 
+					owner = ISR
+				}
+				
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -300
+			}
+			PAL = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
 		}
 	}
 	focus = {
@@ -279,7 +605,7 @@ focus_tree = {
 		icon = GFX_goal_ISR_proclaimation
 		relative_position_id = ISR_revolution
 		x = 0
-		y = 5
+		y = 6
 		available = {
 			OR = {
 				NOT = {
@@ -295,27 +621,25 @@ focus_tree = {
 			focus = ISR_purge_irgun
 			focus = ISR_prepare_coup
 		}
-		cost = 5
+		prerequisite = {
+			focus = ISR_operation_yoav
+			focus = ISR_the_west_bank
+		}
+		cost = 3
 		completion_reward = {
-			news_event = {
-				id = mandate_palestine.208
-				days = 1
-				random_hours = 12
+			hidden_effect = {
+				ISR_david_ben_gurion = {
+					set_portraits = {
+						character = ISR_david_ben_gurion
+						civilian = { large ="gfx/leaders/ISR/r56_portrait_ISR_David_Ben_Gourion.dds" }
+					}
+				}
 			}
 			country_event = {
-				id = israel.4
-				days = 10
+				id = israel.15
+				days = 1 
 				random_hours = 12
 			}
-			if = {
-				limit = {
-					has_idea = MPL_civil_war_isr
-				}
-				remove_ideas = MPL_civil_war_isr
-				
-			}
-			add_ideas = ISR_zionist_consensus
-			remove_ideas = MPL_collapse_idea
 			if = {
 				limit = {
 					controls_state = 1016
@@ -323,6 +647,19 @@ focus_tree = {
 				set_province_name = {
 					id = 1086
 					name = "Yerushalayim"
+				}
+			}
+			if = {
+				limit = {
+					controls_state = 454
+				}
+				set_province_name = {
+					id = 1065
+					name = "Heyfa"
+				}
+				set_province_name = {
+					id = 4206
+					name = "Tel Aviv-Yafo"
 				}
 			}
 			if = {
@@ -398,6 +735,12 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_MANPOWER
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_convene_knesset 
@@ -430,6 +773,10 @@ focus_tree = {
 				random_hours = 12
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
 	}
 	focus = {
 		id = ISR_hold_provisional_elections
@@ -446,6 +793,9 @@ focus_tree = {
 				days = 1
 				random_hours = 12
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -508,10 +858,16 @@ focus_tree = {
 				ideology = communism
 				popularity = 0.1
 			}
+			effect_tooltip = {
+				promote_character = ISR_yaakov_hazan
+			}
 			add_dynamic_modifier = {
 				modifier = r56_ISR_minority_government
 			}
 			custom_effect_tooltip = ISR_minority_government_start
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -525,6 +881,9 @@ focus_tree = {
 		cost = 10
 		completion_reward = {
 			add_ideas = ISR_economic_plan
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -543,6 +902,10 @@ focus_tree = {
 				add_idea = ISR_histadrut_strong
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_invest_in_kibbutzim
@@ -556,6 +919,9 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = ISR_kibbutzim
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -589,6 +955,11 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_work_with_arab
@@ -599,22 +970,15 @@ focus_tree = {
 		prerequisite = {
 			focus = ISR_arab_amnesty
 		}
-		cost = 10
+		cost = 5
 		completion_reward = {
 			add_political_power = 50
 			add_stability = 0.05
-			if = {
-				limit = {
-					PAL = {
-						exists = yes
-						NOT = {
-							has_government = fascism
-							has_government = neutrality
-						}
-					}
-				}
-				
-			}
+			
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -668,6 +1032,9 @@ focus_tree = {
 				}
 			}
 			
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -741,6 +1108,10 @@ focus_tree = {
 						ruling_party = democratic
 						elections_allowed = yes
 					}
+					add_popularity = {
+						ideology = ISR
+						popularity = -0.4
+					}
 				}
 			}
 			else = {
@@ -784,6 +1155,9 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_work_with_communists
@@ -814,6 +1188,9 @@ focus_tree = {
 			add_stability = 0.05
 			custom_effect_tooltip = ISR_minority_government_communists_1
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_target_fascist_remnants
@@ -836,6 +1213,9 @@ focus_tree = {
 				ISR_pp_gain_var = 0.1
 			}
 			custom_effect_tooltip = ISR_minority_government_communists_2
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -862,6 +1242,10 @@ focus_tree = {
 				ISR_pp_gain_var = 0.1
 			}
 			custom_effect_tooltip = ISR_minority_government_communists_3
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -900,6 +1284,11 @@ focus_tree = {
 				}
 			}
 			
+			
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
 		}
 	}
 	focus = {
@@ -962,11 +1351,17 @@ focus_tree = {
 				ideology = democratic
 				popularity = 0.1
 			}
+			effect_tooltip = {
+				promote_character = ISR_david_ben_gurion
+			}
 			add_dynamic_modifier = {
 				modifier = r56_ISR_minority_government
 			}
 			
 			custom_effect_tooltip = ISR_minority_government_start
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -981,6 +1376,11 @@ focus_tree = {
 		completion_reward = {
 			add_ideas = ISR_nationalized_institutions
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
 	}
 	focus = {
 		id = ISR_expand_welfare 
@@ -994,6 +1394,10 @@ focus_tree = {
 		cost = 10
 		completion_reward = {
 			add_ideas = ISR_welfare
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -1014,13 +1418,16 @@ focus_tree = {
 				days = 120
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
 	}
 	focus = {
 		id = ISR_arab_voting_rights
 		icon = GFX_goal_democracy_people
 		relative_position_id = ISR_begin_nationalization
 		y = 2
-		cost = 10
+		cost = 8
 		prerequisite = {
 			focus = ISR_expand_education
 		}
@@ -1029,6 +1436,10 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = ISR_arab_voting
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -1052,6 +1463,9 @@ focus_tree = {
 				add_extra_state_shared_building_slots = 1
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_fight_arab_extremists
@@ -1059,7 +1473,7 @@ focus_tree = {
 		relative_position_id = ISR_arab_voting_rights
 		x = 1 
 		y = 1
-		cost = 10
+		cost = 5
 		prerequisite = {
 			focus = ISR_arab_voting_rights
 		}
@@ -1070,6 +1484,10 @@ focus_tree = {
 				popularity = 0.1
 			}
 			add_stability = 0.05
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -1094,20 +1512,30 @@ focus_tree = {
 					modifier = r56_ISR_palestinian_resistance_lower
 				}
 			}
-			1016 = {
-				remove_dynamic_modifier = {
-					modifier = r56_ISR_palestinian_resistance_low
+			if = {
+				limit = {
+					controls_state = 1016
 				}
-				add_dynamic_modifier = {
-					modifier = r56_ISR_palestinian_resistance_lower
+				1016 = {
+					remove_dynamic_modifier = {
+						modifier = r56_ISR_palestinian_resistance_low
+					}
+					add_dynamic_modifier = {
+						modifier = r56_ISR_palestinian_resistance_lower
+					}
 				}
 			}
-			1017 = {
-				remove_dynamic_modifier = {
-					modifier = r56_ISR_palestinian_resistance_low
+			if = {
+				limit = {
+					controls_state = 1017
 				}
-				add_dynamic_modifier = {
-					modifier = r56_ISR_palestinian_resistance_lower
+				1017 = {
+					remove_dynamic_modifier = {
+						modifier = r56_ISR_palestinian_resistance_low
+					}
+					add_dynamic_modifier = {
+						modifier = r56_ISR_palestinian_resistance_lower
+					}
 				}
 			}
 			if = {
@@ -1136,6 +1564,11 @@ focus_tree = {
 					}
 				}
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -1177,6 +1610,9 @@ focus_tree = {
 			}
 			custom_effect_tooltip = ISR_minority_government_hashomer_1
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_push_secular_education
@@ -1192,6 +1628,9 @@ focus_tree = {
 				ISR_research_speed_var = 0.075
 			}
 			custom_effect_tooltip = ISR_minority_government_hashomer_2
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
 		}
 	}
 	focus = {
@@ -1211,6 +1650,10 @@ focus_tree = {
 				ISR_conscription_factor_var = 0.15
 			}
 			custom_effect_tooltip = ISR_minority_government_hashomer_3
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
 		}
 	}
 	focus = {
@@ -1239,6 +1682,9 @@ focus_tree = {
 				ISR_pp_gain_var = 0.2
 			}
 			custom_effect_tooltip = ISR_minority_government_hashomer_4
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -1292,6 +1738,9 @@ focus_tree = {
 			}
 			custom_effect_tooltip = ISR_minority_government_religious_1
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_fund_religious_education
@@ -1311,6 +1760,9 @@ focus_tree = {
 			}
 			custom_effect_tooltip = ISR_minority_government_religious_2
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_exempt_yeshiva_students
@@ -1320,12 +1772,15 @@ focus_tree = {
 		prerequisite = {
 			focus = ISR_fund_religious_education
 		}
-		cost = 10
+		cost = 7
 		completion_reward = {
 			add_to_variable = {
 				ISR_pp_gain_var = 0.15
 			}
 			custom_effect_tooltip = ISR_minority_government_religious_3
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -1336,10 +1791,14 @@ focus_tree = {
 		prerequisite = {
 			focus = ISR_exempt_yeshiva_students
 		}
-		cost = 10
+		cost = 8
 		completion_reward = {
 			add_stability = 0.1
 			add_political_power = 100
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
 		}
 	}
 	focus = {
@@ -1364,6 +1823,10 @@ focus_tree = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_WAR_SUPPORT
 		}
 	}
 	focus = {
@@ -1444,10 +1907,29 @@ focus_tree = {
 				ideology = neutrality
 				popularity = 0.1
 			}
+			if = {
+				limit = {
+					has_country_leader = {
+						character = ISR_zeev_jabotinsky
+						ruling_only = no
+					}
+				}
+				effect_tooltip = {
+					promote_character = ISR_zeev_jabotinsky
+				}
+			}
+			else = {
+				effect_tooltip = {
+					promote_character = ISR_menachem_begin
+				}
+			}
 			add_dynamic_modifier = {
 				modifier = r56_ISR_minority_government
 			}
 			custom_effect_tooltip = ISR_minority_government_start
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -1463,10 +1945,14 @@ focus_tree = {
 			add_political_power = 100
 			add_stability = 0.1
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
 	}
 	focus = {
 		id = ISR_begin_economy_deregulation
-		icon = GFX_focus_mex_privatisation
+		icon = GFX_goal_generic_economics_reform
 		relative_position_id = ISR_cement_jewish_identity
 		x = -1
 		y = 1
@@ -1476,6 +1962,9 @@ focus_tree = {
 		cost = 10
 		completion_reward = {
 			add_ideas = ISR_deregulation
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -1493,6 +1982,10 @@ focus_tree = {
 				remove_idea = ISR_histadrut_start
 				add_idea = ISR_histadrut_weak
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -1537,6 +2030,10 @@ focus_tree = {
 			add_manpower = 5000
 			
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
+		}
 	}
 	focus = {
 		id = ISR_martial_law
@@ -1566,6 +2063,11 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_reject_lesser_israel
@@ -1593,6 +2095,9 @@ focus_tree = {
 					}
 				}
 			}
+			else = {
+				add_stability  = 0.05
+			}
 			if = {
 				limit = {
 					controls_state = 949
@@ -1608,6 +2113,14 @@ focus_tree = {
 					}
 				}
 			}
+			else = {
+				add_war_support = 0.05
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_MANPOWER
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -1636,6 +2149,9 @@ focus_tree = {
 		#will_lead_to_war_with = 455.controller
 		cost = 10 
 		completion_reward = {
+			add_state_claim = 455
+			add_state_claim = 1021
+			add_state_claim = 1022
 			if = {
 				limit = {
 					455 = {
@@ -1660,6 +2176,10 @@ focus_tree = {
 			}
 			
 			
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_ANNEXATION
 		}
 	}
 	focus = {
@@ -1707,6 +2227,9 @@ focus_tree = {
 			custom_effect_tooltip = ISR_minority_government_hardliners_1
 			
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_hunt_communists
@@ -1731,6 +2254,9 @@ focus_tree = {
 			custom_effect_tooltip = ISR_minority_government_hardliners_2	
 			
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
 	}
 	focus = {
 		id = ISR_dismantle_unions
@@ -1740,8 +2266,8 @@ focus_tree = {
 		prerequisite = {
 			focus = ISR_hunt_communists
 		}
-		available = {
-			has_completed_focus = ISR_weaken_histadrut
+		prerequisite = {
+			focus = ISR_weaken_histadrut
 		}
 		cost = 10
 		completion_reward = {
@@ -1753,10 +2279,14 @@ focus_tree = {
 			}
 			custom_effect_tooltip = ISR_minority_government_hardliners_3
 		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+		}
 	}
 	focus = {
 		id = ISR_outlaw_left
-		icon = GFX_goal_generic_destroy_socdem
+		icon = GFX_goal_ISR_mapai
 		relative_position_id = ISR_dismantle_unions
 		y = 1
 		prerequisite = {
@@ -1797,6 +2327,9 @@ focus_tree = {
 				}
 			}
 			custom_effect_tooltip = ISR_minority_government_hardliners_4
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
 	}
 	focus = {
@@ -1865,6 +2398,9 @@ focus_tree = {
 					country_event = generic.2
 				}
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ALLIANCE
 		}
 	}
 	focus = {
@@ -1941,6 +2477,9 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_ALLIANCE
+		}
 	}
 	focus = {
 		id = ISR_alone
@@ -1964,6 +2503,10 @@ focus_tree = {
 				can_create_factions = yes
 			}
 			add_war_support = 0.1
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_ALLIANCE
 		}
 	}
 	focus = {
@@ -2040,6 +2583,9 @@ focus_tree = {
 					country_event = generic.2
 				}
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ALLIANCE
 		}
 	}
 	focus = {
@@ -2127,6 +2673,9 @@ focus_tree = {
 				}
 			}
 		}
+		search_filters = {
+			FOCUS_FILTER_ALLIANCE
+		}
 	}
 	focus = {
 		id = ISR_finish_palestine
@@ -2162,6 +2711,9 @@ focus_tree = {
 				target = PAL
 				type = annex_everything
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
 		}
 	}
 	focus = {
@@ -2213,13 +2765,17 @@ focus_tree = {
 					damage = 2
 				}
 			}
-			declare_war_on = { type = annex_everything target = EGY }		
+			declare_war_on = { type = annex_everything target = EGY }	
+			custom_effect_tooltip = MPL_newline	
 			custom_effect_tooltip = ISR_suez_tooltip
+		}
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
 		}
 	}
 	focus = {
 		id = ISR_no_other_place_than_zion
-		icon = GFX_goal_star_of_david
+		icon = GFX_goal_ISR_whole
 		x = 0
 		y = 1
 		relative_position_id = ISR_alone
@@ -2230,21 +2786,38 @@ focus_tree = {
 			focus = ISR_join_USA
 			focus = ISR_join_ITA
 		}
-		cost = 10
+		cost = 15
 
 		ai_will_do = {
 			factor = 50
 		}
 		completion_reward = {
 			add_ideas = ISR_defense_of_zion
-			add_political_power = 150
-			add_stability = 0.1
+			add_political_power = 50
+			add_war_support = 0.1
 			add_popularity = {
 				ideology = ISR
 				popularity = 0.2
 			}
+			add_country_leader_trait = ISR_figure_of_the_jewish_people
+			if = {
+				limit = {
+					has_country_leader = {
+						character = ISR_yaakov_hazan
+						ruling_only = yes
+					}
+				}
+				hidden_effect = {
+					ISR_yaakov_hazan = {
+						set_portraits = {
+							character = ISR_yaakov_hazan
+							civilian = { large ="gfx/leaders/ISR/r56_portrait_ISR_Yaakov_Hazan_old.dds" }
+						}
+					}
+				}
+			}
 		}
-		search_filters = { FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
 	}	
 	focus = {
 		id = ISR_destroy_nazi
@@ -2268,6 +2841,10 @@ focus_tree = {
 				type = topple_government
 			}
 			add_ideas = MPL_against_germany_idea
+		}
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+			FOCUS_FILTER_MILITARY_IMPROVEMENT
 		}
 	}
     focus = {
@@ -2299,7 +2876,11 @@ focus_tree = {
 				}
 			}			
 
-        }    
+        } 
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_WAR_SUPPORT
+		}   
     } 
 
     focus = {
@@ -2311,7 +2892,6 @@ focus_tree = {
         y = 1
         cost = 5
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_RESEARCH }
         ai_will_do = {
             factor = 10
         }
@@ -2324,7 +2904,11 @@ focus_tree = {
 				uses = 1
 				category = land_doctrine
 			}   
-        }    
+        }
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+			FOCUS_FILTER_RESEARCH
+		}    
     }
     focus = {
 		id = ISR_proffesional_army_training
@@ -2338,6 +2922,19 @@ focus_tree = {
 		cost = 10
 		completion_reward = {
 			add_ideas = MPL_professional_army
+			if = {
+				limit = {
+					NOT = {
+						has_rule = can_send_volunteers
+					}
+				}
+				set_rule = {
+					can_send_volunteers = yes
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_MILITARY_IMPROVEMENT
 		}
 	}
 	focus = {
@@ -2355,6 +2952,9 @@ focus_tree = {
 		y = 1
 		completion_reward = {
 			add_ideas = ISR_special_forces_idea
+		}
+		search_filters = {
+			FOCUS_FILTER_MILITARY_IMPROVEMENT
 		}
 	}
     focus = {
@@ -2378,7 +2978,7 @@ focus_tree = {
             }	
             add_ideas = ISR_special_night_squads_idea
         }
-        search_filters = { FOCUS_FILTER_RESEARCH }
+        search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_MILITARY_IMPROVEMENT }
 
     }
        	 
@@ -2391,7 +2991,7 @@ focus_tree = {
         y = 1
         cost = 10
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_MILITARY_RESEARCH }
+        search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
         ai_will_do = {
             factor = 10
         }
@@ -2447,7 +3047,7 @@ focus_tree = {
         y = 1
         cost = 5
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_MILITARY_RESEARCH }
+        search_filters = {FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_AIR_XP }
         ai_will_do = {
             factor = 10
         }
@@ -2527,7 +3127,7 @@ focus_tree = {
 				category = air_doctrine
 			}
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
 	}
 	focus = {
 		id = ISR_build_trainer_aircrafts
@@ -2569,7 +3169,7 @@ focus_tree = {
 				}
 			}		
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
 	}
 	focus = {
 		id = ISR_bimotor_aircrafts
@@ -2619,7 +3219,7 @@ focus_tree = {
 				}
 			}		
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
 	}
 	
     focus = {
@@ -2663,7 +3263,7 @@ focus_tree = {
         y = 1
         cost = 10
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_INDUSTRY }
+        search_filters = {FOCUS_FILTER_INDUSTRY	FOCUS_FILTER_RESEARCH }
         ai_will_do = {
             factor = 10
         }
@@ -2682,7 +3282,10 @@ focus_tree = {
 				uses = 1
 				category = construction_tech
 			}  
-            random_core_state = {
+            random_owned_controlled_state = {
+				limit = {
+					is_core_of = ISR
+				}
                 prioritize = { 454  }
                 add_extra_state_shared_building_slots = 1
                 add_building_construction = {
@@ -2698,12 +3301,15 @@ focus_tree = {
 		icon = GFX_goal_ISR_drain_swamp
 		relative_position_id = ISR_building_the_new_homeland
 		y = 1
-		cost = 10
+		cost = 8
 		prerequisite = {
 			focus = ISR_building_the_new_homeland
 		}
 		completion_reward = {
 			custom_effect_tooltip = ISR_land_reclamation_unlocked
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
 		}
 	}
 	focus = {
@@ -2751,7 +3357,7 @@ focus_tree = {
         y = 1
         cost = 5
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_INDUSTRY }
+        search_filters = { FOCUS_FILTER_MILITARY_EQUIPMENT FOCUS_FILTER_RESEARCH }
         ai_will_do = {
             factor = 10
         }
@@ -2781,7 +3387,7 @@ focus_tree = {
             controls_state = 454
         }
         available_if_capitulated = yes
-        search_filters = {FOCUS_FILTER_INDUSTRY }
+        search_filters = { FOCUS_FILTER_RESEARCH }
         ai_will_do = {
             factor = 10
         }
@@ -2865,8 +3471,10 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_INDUSTRY }
 
 		completion_reward = {
-            random_core_state = {
-                prioritize = { 454  }
+            random_owned_controlled_state = {
+				limit = {
+					is_core_of = ISR
+				}
                 add_extra_state_shared_building_slots = 1
                 add_building_construction = {
                     type = industrial_complex
@@ -2900,10 +3508,13 @@ focus_tree = {
 		}
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STEEL}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
 
 		completion_reward = {
-            random_core_state = {
+            random_owned_controlled_state = {
+				limit = {
+					is_core_of = ISR
+				}
                 prioritize = { 454 }
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
@@ -2942,7 +3553,10 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_INDUSTRY }
 
 		completion_reward = {
-            random_core_state = {
+            random_owned_controlled_state = {
+				limit = {
+					is_core_of = ISR
+				}
                 prioritize = { 1017  }
                 add_extra_state_shared_building_slots = 2
 			}		
@@ -3011,7 +3625,7 @@ focus_tree = {
 		y = 1
 		relative_position_id = ISR_independent_steel_production
 		
-		cost = 10
+		cost = 7
 
 		available_if_capitulated = yes
 
@@ -3048,7 +3662,7 @@ focus_tree = {
 		}
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STEEL}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
 
 		completion_reward = {
             random_owned_controlled_state = {
@@ -3085,7 +3699,7 @@ focus_tree = {
 				category = artillery
 			}
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_XP }
 	}  
 	focus = {
 		id = ISR_establish_a_military_academy
@@ -3117,7 +3731,7 @@ focus_tree = {
 		x = 4
 		y = 1
 
-		cost = 10
+		cost = 8
 
 		allow_branch = {
 			has_dlc = "La Resistance"
@@ -3148,7 +3762,10 @@ focus_tree = {
 						has_intelligence_agency = yes
 					}
 				}
-				create_intelligence_agency = yes				
+				create_intelligence_agency = {
+					name = "Mossad"
+					icon = GFX_intelligence_agency_logo_generic_4
+				}			
 			}	
 			add_ideas = GER_abwehr_contacts
 			hidden_effect = {
@@ -3183,7 +3800,7 @@ focus_tree = {
                 upgrade_intelligence_agency = upgrade_decryption_boost_2            
             }						
 		}
-		search_filters = { FOCUS_FILTER_ESPIONAGE FOCUS_FILTER_RESEARCH }
+		search_filters = { FOCUS_FILTER_ESPIONAGE }
 	}
 	focus = {
 		id = ISR_world_wide_spy_web
@@ -3254,7 +3871,7 @@ focus_tree = {
 		y = 1
 		relative_position_id = ISR_military_vehicles
 
-		cost = 10
+		cost = 7
 
 		ai_will_do = {
 			factor = 6
@@ -3275,6 +3892,10 @@ focus_tree = {
 				uses = 1
 				category = logistics_tech
 			}
+		}
+		search_filters = {
+			FOCUS_FILTER_MILITARY_IMPROVEMENT
+			FOCUS_FILTER_RESEARCH
 		}
 	}		
 	
@@ -3717,6 +4338,7 @@ focus_tree = {
 
 			add_opinion_modifier = { target = ENG modifier = gen_ships_british }
 		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
 	}
 
 

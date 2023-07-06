@@ -1330,7 +1330,7 @@ leader_traits = {
 		random = no
 		political_power_factor = 0.05
 		drift_defence_factor = -0.1
-		political_advisor_cost_factor = -0.1
+		political_advisor_cost_factor = -0.25
 	}
 	EGY_the_young_king = {
 		random = no
@@ -1441,11 +1441,10 @@ leader_traits = {
 			value = 50
 		}
 	}
-	feminist_figure = {
+	EGY_sudanese_nationalist_figure = {
 		random = no
-		sprite = 13
-		conscription_factor = 0.05
-		political_power_factor = 0.1
+		compliance_growth = 0.05
+		non_core_manpower = 0.1
 	}
 	anti_fascist_appeaser = {
 		random = no
@@ -4380,10 +4379,6 @@ leader_traits = {
 		stability_factor = -0.1
 		consumer_goods_factor = 0.05
 	}
-	enlightened_architect = {
-		production_speed_infrastructure_factor = 0.05
-		production_speed_buildings_factor = 0.10
-	}
 
 ###------> VIE <><> <><> <><> <><> <><>
 	
@@ -4406,6 +4401,11 @@ leader_traits = {
 		random = no
 		political_power_factor = -0.1
 		stability_factor = -0.05
+	}
+	MPL_unified_government = {
+		random = no
+		political_power_factor = 0.1
+		stability_factor = 0.05
 	}
 
 	MPL_zionist_sympathizer = {
@@ -4452,18 +4452,54 @@ leader_traits = {
 		conscription = 0.005
 		
 	}
+
+###------> ISR <><> <><> <><> <><> <><>
 	ISR_veteran_zionist = {
 		random = no
 		political_power_factor = 0.1
 		stability_factor = 0.1
 	}
+	ISR_labour_zionist = {
+		random =  no
+		industrial_capacity_factory = 0.1
+		consumer_goods_factor = 0.02
+	}
 	ISR_scientific_genius = {
 		random = no
-		research_speed_factor = 0.05
+		research_speed_factor = 0.075
 	}
 	ISR_inexperienced_politician = {
 		random = no
 		political_power_factor = -0.05
+	}
+	ISR_poali_zion_veteran = {
+		random = no
+		political_power_factor = 0.05
+		democratic_drift = 0.02
+		stability_factor = 0.05
+	}
+	ISR_kibbutznik = {
+		random = no
+		min_export = -0.05
+		production_speed_buildings_factor = 0.05
+		communism_drift = 0.02
+	}
+	ISR_liberal_nationalist = {
+		random = no
+		consumer_goods_factor = -0.02
+		neutrality_drift = 0.02
+	}
+	ISR_militia_veteran = {
+		random = no
+		army_org_regain = 0.05
+		neutrality_drift = 0.02
+	}
+	ISR_figure_of_the_jewish_people = {
+		random = no
+		political_power_factor = 0.1
+		drift_defence_factor = 0.3
+		stability_factor = 0.1
+		party_popularity_stability_factor = 0.1
 	}
 
 ###------> XXX <><> <><> <><> <><> <><>
